@@ -1,0 +1,9 @@
+*.py[cod]
+
+.env.yml
+.serverless
+node_modules/
+venv/
+.vscode/
+
+redis.yml
