@@ -6,4 +6,7 @@ node_modules/
 venv/
 .vscode/
 
+package-lock.json
+
 redis.yml
+.env.yml
