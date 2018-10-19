@@ -1,0 +1,30 @@
+plugins:
+  - serverless-python-requirements
+
+service:
+  name: sidekiq-queue-cloudwatch-metrics
+
+provider:
+  name: aws
+  runtime: python3.6
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "logs:*"
+        - "cloudwatch:Put*"
+      Resource: "*"
+
+functions:
+  sidekiq-queue-cloudwatch-metrics:
+    name: ${self:service}-${opt:stage, 'dev'}
+    handler: main.handler
+    description: Put sidekiq queue metrics in CloudWatch and set alarms.
+    memorySize: 128
+    timeout: 120
+    vpc:
+      securityGroupIds: ${file(.env.yml):lambda.vpc.securityGroupIds}
+      subnetIds: ${file(.env.yml):lambda.vpc.subnetIds}
+    events:
+     - schedule:
+          rate: rate(1 minute)
+          enabled: enable

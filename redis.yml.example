@@ -1,0 +1,22 @@
+sidekiq_namespaces:
+  sidekiq-prod-namespace:
+    host: redis1.asdfads.ng.0001.use1.cache.amazonaws.com
+    port: 6379
+    db: 0
+    cw_period: 60
+    cw_evaluation_periods: 3
+    cw_threshold: 20
+   my-sidekiq-namespace:
+     host: redis1.asdfads.ng.0001.use1.cache.amazonaws.com
+     port: 6379
+     db: 2
+    cw_period: 60
+    cw_evaluation_periods: 5
+    cw_threshold: 20000
+   some-other-sidekiq-namespace:
+     host: staging-redis.asdfads.ng.0001.use1.cache.amazonaws.com
+     port: 6379
+     db: 7
+    cw_period: 60
+    cw_evaluation_periods: 5
+    cw_threshold: 20000
