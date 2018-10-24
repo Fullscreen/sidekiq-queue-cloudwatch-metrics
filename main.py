@@ -44,10 +44,6 @@ def cw_put_metric_alarm(metric_name, cfg):
         Statistic='Maximum',
         Dimensions=[
             {
-                'Name': 'Job',
-                'Value': metric_name
-            },
-            {
                 'Name': 'Host',
                 'Value': host
             },
@@ -61,7 +57,7 @@ def cw_put_metric_alarm(metric_name, cfg):
         EvaluationPeriods=cfg['cw_evaluation_periods'],
         Threshold=cfg['cw_threshold'],
         ComparisonOperator='GreaterThanThreshold',
-        TreatMissingData='breaching',
+        TreatMissingData='missing',
     )
 
 
@@ -74,6 +70,7 @@ def handler(event, context):
         r = redis.StrictRedis(host=cfg['host'], port=port, db=db)
         queues = r.smembers(ns + ':queues')
 
+        aggregated_length = 0
         for q in queues:
             queue = q.decode('utf-8')
             queue_length = r.llen(ns + ':queue:' + queue)
@@ -83,3 +80,9 @@ def handler(event, context):
                                                           queue_length))
             cw_put_metric_data(metric_name, queue_length, cfg['host'], db)
             cw_put_metric_alarm(metric_name, cfg)
+
+            aggregated_length += queue_length
+
+        metric_name = '{}:aggregate'.format(ns)
+        cw_put_metric_data(metric_name, aggregated_length, cfg['host'], db)
+        cw_put_metric_alarm(metric_name, cfg)
