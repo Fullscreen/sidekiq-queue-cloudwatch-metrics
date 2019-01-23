@@ -67,8 +67,12 @@ def handler(event, context):
     for ns, cfg in config['sidekiq_namespaces'].items():
         port = cfg.get('port', 6379)
         db = cfg.get('db', 0)
+        use_namespace = cfg.get('use_namespace', True)
         r = redis.StrictRedis(host=cfg['host'], port=port, db=db)
         queues = r.smembers(ns + ':queues')
+
+        if not use_namespace:
+            queues = r.smembers('queues')
 
         aggregated_length = 0
         for q in queues:
