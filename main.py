@@ -78,6 +78,8 @@ def handler(event, context):
         for q in queues:
             queue = q.decode('utf-8')
             queue_length = r.llen(ns + ':queue:' + queue)
+            if not use_namespace:
+                queue_length = r.llen('queue:' + queue)
             metric_name = '{}:{}'.format(ns, queue)
             print('host: {}, queue: {}, value: {}'.format(cfg['host'],
                                                           metric_name,
