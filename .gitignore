@@ -8,5 +8,7 @@ venv/
 
 package-lock.json
 
-redis.yml
+redis.yml*
 .env.yml
+
+Makefile
